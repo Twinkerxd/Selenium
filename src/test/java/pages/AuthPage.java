@@ -21,10 +21,14 @@ public class AuthPage extends BasePage {
         PageFactory.initElements(driver, this);
     }
 
-    public InventoryPage login(String login, String password) {
+    public InventoryPage logIn(String login, String password) {
         usernameInput.sendKeys(login);
         passwordInput.sendKeys(password);
         loginButton.click();
         return new InventoryPage(driver);
+    }
+
+    public InventoryPage standardUserLogIn() {
+        return logIn("standard_user", "secret_sauce");
     }
 }

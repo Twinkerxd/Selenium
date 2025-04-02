@@ -7,10 +7,19 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.util.List;
+import java.util.Random;
+
 public class InventoryPage extends BasePage {
 
     @FindBy(css = "[data-test='shopping-cart-link']")
     private WebElement cartIcon;
+
+    @FindBy(css = "[data-test='shopping-cart-badge']")
+    private WebElement shoppingCartBadge;
+
+    @FindBy(css = "[data-test^='add-to-cart']")
+    private List<WebElement> addToCartButtons;
 
     public InventoryPage(WebDriver driver) {
         super(driver);
@@ -27,4 +36,16 @@ public class InventoryPage extends BasePage {
         cartIcon.click();
         return new CartPage(driver);
     }
+
+    public WebElement getShoppingCartBadge() {
+        return shoppingCartBadge;
+    }
+
+    public InventoryPage addRandomAddItemToCart() {
+        Random random = new Random();
+        addToCartButtons.get(random.nextInt(addToCartButtons.size())).click();
+        return this;
+    }
+
+
 }

@@ -13,6 +13,8 @@ public class BaseTest {
     protected WebDriver driver;
     protected WebDriverWait wait;
 
+    //beforeAll -> docker, kafka
+
     @BeforeEach
     public void setUp() {
         driver = new ChromeDriver();
