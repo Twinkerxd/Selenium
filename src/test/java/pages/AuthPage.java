@@ -16,19 +16,41 @@ public class AuthPage extends BasePage {
     @FindBy(id = "login-button")
     private WebElement loginButton;
 
+    @FindBy(css = "[data-test='error']")
+    private WebElement errorMessage;
+
     public AuthPage(WebDriver driver) {
         super(driver);
         PageFactory.initElements(driver, this);
     }
 
     public InventoryPage logIn(String login, String password) {
-        usernameInput.sendKeys(login);
-        passwordInput.sendKeys(password);
+        fillLogin(login);
+        fillPassword(password);
+        clickLoginButton();
+        return new InventoryPage(driver);
+    }
+
+    public InventoryPage clickLoginButton() {
         loginButton.click();
         return new InventoryPage(driver);
     }
 
+    public AuthPage fillLogin(String login) {
+        usernameInput.sendKeys(login);
+        return this;
+    }
+
+    public AuthPage fillPassword(String password) {
+        passwordInput.sendKeys(password);
+        return this;
+    }
+
     public InventoryPage standardUserLogIn() {
         return logIn("standard_user", "secret_sauce");
+    }
+
+    public String getErrorMessage() {
+        return errorMessage.getText();
     }
 }

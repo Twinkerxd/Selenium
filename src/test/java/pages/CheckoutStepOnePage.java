@@ -7,6 +7,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 public class CheckoutStepOnePage extends BasePage {
+    // https://www.saucedemo.com/checkout-step-one.html
 
     @FindBy(css = "#first-name")
     private WebElement firstNameInput;

@@ -7,6 +7,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 public class CheckoutCompletePage extends BasePage {
+    // https://www.saucedemo.com/checkout-complete.html
 
     @FindBy(css = "#back-to-products")
     private WebElement backHomeButton;

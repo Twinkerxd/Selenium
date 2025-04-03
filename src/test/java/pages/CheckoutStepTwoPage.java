@@ -7,6 +7,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 public class CheckoutStepTwoPage extends BasePage {
+    // https://www.saucedemo.com/checkout-step-two.html
 
     @FindBy(css = "#finish")
     private WebElement finishButton;

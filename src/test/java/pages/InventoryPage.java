@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Random;
 
 public class InventoryPage extends BasePage {
+    // https://www.saucedemo.com/inventory.html
 
     @FindBy(css = "[data-test='shopping-cart-link']")
     private WebElement cartIcon;

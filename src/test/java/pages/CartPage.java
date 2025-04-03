@@ -9,6 +9,7 @@ import org.openqa.selenium.support.PageFactory;
 import java.util.List;
 
 public class CartPage extends BasePage {
+    // https://www.saucedemo.com/cart.html
 
     @FindBy(css = "#checkout")
     private WebElement checkoutButton;
