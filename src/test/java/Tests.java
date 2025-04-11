@@ -3,9 +3,16 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.WebElement;
 import pages.AuthPage;
 import pages.CartPage;
 import pages.InventoryPage;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+import static pages.InventoryPage.ProductSortOption.PRICE_LOWER_HIGH;
 
 public class Tests extends BaseTest {
 
@@ -74,6 +81,16 @@ public class Tests extends BaseTest {
         authPage.clickLoginButton();
         Assertions.assertTrue(authPage.getErrorMessage()
                 .contains("Password is required"));
+    }
+
+    @Test
+    public void sortByPrice() {
+        List<Double> list = openMainPage().standardUserLogIn().clickSortDropdown().selectSortOptionByValue(PRICE_LOWER_HIGH).getListOfPrices();
+
+        List<Double> expectedResult = new ArrayList<>(list);
+        expectedResult.sort(Comparator.naturalOrder());
+
+        Assertions.assertEquals(expectedResult,list);
     }
 
 }

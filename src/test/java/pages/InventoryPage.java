@@ -6,9 +6,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.Select;
 
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class InventoryPage extends BasePage {
     // https://www.saucedemo.com/inventory.html
@@ -21,6 +23,12 @@ public class InventoryPage extends BasePage {
 
     @FindBy(css = "[data-test^='add-to-cart']")
     private List<WebElement> addToCartButtons;
+
+    @FindBy(css = "[data-test='product-sort-container']")
+    private WebElement sortDropdown;
+
+    @FindBy(css = ".inventory_item_price")
+    private List<WebElement> listOfPrices;
 
     public InventoryPage(WebDriver driver) {
         super(driver);
@@ -48,5 +56,39 @@ public class InventoryPage extends BasePage {
         return this;
     }
 
+    public InventoryPage clickSortDropdown() {
+        sortDropdown.click();
+        return this;
+    }
 
+    public InventoryPage selectSortOptionByValue(ProductSortOption sortOption) {
+        Select select = new Select(sortDropdown);
+        select.selectByValue(sortOption.getValue());
+        return this;
+    }
+
+    public enum ProductSortOption {
+        NAME_ASC("az"),
+        NAME_DESC("za"),
+        PRICE_LOWER_HIGH("lohi"),
+        PRICE_HIGH_LOWER("hilo");
+
+        private final String value;
+
+        ProductSortOption(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
+    public List<Double> getListOfPrices() {
+        List<Double> priceWithDollar = listOfPrices.stream().map(WebElement::getText)
+                .map(price -> price.replace("$",""))
+                .map(Double::parseDouble).toList();
+
+        return priceWithDollar;
+    }
 }
