@@ -3,7 +3,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.WebElement;
 import pages.AuthPage;
 import pages.CartPage;
 import pages.InventoryPage;
@@ -93,4 +92,11 @@ public class Tests extends BaseTest {
         Assertions.assertEquals(expectedResult,list);
     }
 
+    @Test
+    public void checkTitleColorAfterMouseOver() {
+        String actualResult = openMainPage().standardUserLogIn().moveCursorToFirstItemName().getFirstItemColor();
+        String expectedResult = "rgba(61, 220, 145, 1)";
+
+        Assertions.assertEquals(expectedResult, actualResult);
+    }
 }

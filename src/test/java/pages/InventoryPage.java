@@ -4,13 +4,13 @@ import core.BasePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 public class InventoryPage extends BasePage {
     // https://www.saucedemo.com/inventory.html
@@ -29,6 +29,9 @@ public class InventoryPage extends BasePage {
 
     @FindBy(css = ".inventory_item_price")
     private List<WebElement> listOfPrices;
+
+    @FindBy(css = "[data-test='inventory-item-name']")
+    private WebElement firstItemName;
 
     public InventoryPage(WebDriver driver) {
         super(driver);
@@ -86,9 +89,19 @@ public class InventoryPage extends BasePage {
 
     public List<Double> getListOfPrices() {
         List<Double> priceWithDollar = listOfPrices.stream().map(WebElement::getText)
-                .map(price -> price.replace("$",""))
+                .map(price -> price.replace("$", ""))
                 .map(Double::parseDouble).toList();
 
         return priceWithDollar;
+    }
+
+    public InventoryPage moveCursorToFirstItemName() {
+        Actions actions = new Actions(driver);
+        actions.moveToElement(firstItemName).perform();
+        return this;
+    }
+
+    public String getFirstItemColor() {
+        return firstItemName.getCssValue("color");
     }
 }
