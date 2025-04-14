@@ -3,6 +3,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import pages.AuthPage;
 import pages.CartPage;
 import pages.InventoryPage;
@@ -10,10 +13,12 @@ import pages.InventoryPage;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static pages.InventoryPage.ProductSortOption.PRICE_LOWER_HIGH;
 
 public class Tests extends BaseTest {
+    //https://www.saucedemo.com/
 
     @Test
     @DisplayName("End to end test")
@@ -39,7 +44,7 @@ public class Tests extends BaseTest {
 
     @Test
     public void visibleOfShoppingCartBadge() {
-        InventoryPage inventoryPage =  openMainPage()
+        InventoryPage inventoryPage = openMainPage()
                 .standardUserLogIn()
                 .addRandomAddItemToCart();
 
@@ -50,36 +55,8 @@ public class Tests extends BaseTest {
     @Test
     public void removeItemFromCart() {
         CartPage cartPage = openMainPage().standardUserLogIn().addRandomAddItemToCart().clickCartIcon();
-        Assertions.assertEquals(1,cartPage.getItemsCount());
-        Assertions.assertEquals(0,cartPage.clickRemoveButton().getItemsCount());
-    }
-
-    @Test
-    public void loginWithInvalidCredentials() {
-        AuthPage authPage = openMainPage();
-
-        authPage.logIn("qwe","qwe");
-        Assertions.assertTrue(authPage.getErrorMessage()
-                .contains("Username and password do not match any user in this service"));
-    }
-
-    @Test
-    public void emptyUsernameErrorMessage() {
-        AuthPage authPage = openMainPage();
-
-        authPage.clickLoginButton();
-        Assertions.assertTrue(authPage.getErrorMessage()
-                .contains("Username is required"));
-    }
-
-    @Test
-    public void emptyPasswordErrorMessage() {
-        AuthPage authPage = openMainPage();
-
-        authPage.fillLogin("djkfcghn");
-        authPage.clickLoginButton();
-        Assertions.assertTrue(authPage.getErrorMessage()
-                .contains("Password is required"));
+        Assertions.assertEquals(1, cartPage.getItemsCount());
+        Assertions.assertEquals(0, cartPage.clickRemoveButton().getItemsCount());
     }
 
     @Test
@@ -89,7 +66,7 @@ public class Tests extends BaseTest {
         List<Double> expectedResult = new ArrayList<>(list);
         expectedResult.sort(Comparator.naturalOrder());
 
-        Assertions.assertEquals(expectedResult,list);
+        Assertions.assertEquals(expectedResult, list);
     }
 
     @Test
@@ -99,4 +76,25 @@ public class Tests extends BaseTest {
 
         Assertions.assertEquals(expectedResult, actualResult);
     }
+
+    @ParameterizedTest
+    @MethodSource("invalidCredentialsData")
+    public void loginWithInvalidCredentials(String login, String password, String expectedErrorMessage) {
+        openMainPage().logIn(login, password);
+        AuthPage authPage = new AuthPage(driver);
+        String actualErrorMessage = authPage.getErrorMessage();
+
+        Assertions.assertTrue(actualErrorMessage.contains(expectedErrorMessage));
+    }
+
+    static Stream<Arguments> invalidCredentialsData() {
+        return Stream.of(
+                Arguments.arguments("locked_out_user", "secret_sauce", "Sorry, this user has been locked out."),
+                Arguments.arguments("123", "123", "Username and password do not match any user in this service"),
+                Arguments.arguments("123", "", "Password is required"),
+                Arguments.arguments("", "123", "Username is required")
+        );
+
+    }
+
 }
